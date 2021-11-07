@@ -9,6 +9,8 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] float weaponRange = 2f;
+        [SerializeField] float weaponDamage = 5f;
+
         [SerializeField] float coolDown = 1f;
 
         Transform target;
@@ -35,6 +37,7 @@ namespace RPG.Combat
         {
             if (timeSinceLastAttack > coolDown)
             {
+                //Trigger hit event in animation events
                 GetComponent<Animator>().SetTrigger("attack");
                 timeSinceLastAttack = 0;
             }
@@ -43,7 +46,8 @@ namespace RPG.Combat
         //Animation event
         void Hit()
         {
-
+            Health health = target.GetComponent<Health>();
+            health.TakeDamage(weaponDamage);
         }
 
         private bool GetIsInRange()
