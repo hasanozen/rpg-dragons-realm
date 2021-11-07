@@ -9,21 +9,41 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] float weaponRange = 2f;
+        [SerializeField] float coolDown = 1f;
 
         Transform target;
+        float timeSinceLastAttack = 0;
 
         private void Update()
         {
+            timeSinceLastAttack += Time.deltaTime;
+
             if (target == null) return;
 
-            //if (target != null && !GetIsInRange())
-            //{
-            //    GetComponent<Mover>().MoveTo(target.position);
-            //}
-            //else
-            //{
-            //    GetComponent<Mover>().Cancel();
-            //}
+            if (target != null && !GetIsInRange())
+            {
+                GetComponent<Mover>().MoveTo(target.position);
+            }
+            else
+            {
+                GetComponent<Mover>().Cancel();
+                AttackBehaviour();
+            }
+        }
+
+        private void AttackBehaviour()
+        {
+            if (timeSinceLastAttack > coolDown)
+            {
+                GetComponent<Animator>().SetTrigger("attack");
+                timeSinceLastAttack = 0;
+            }
+        }
+
+        //Animation event
+        void Hit()
+        {
+
         }
 
         private bool GetIsInRange()
